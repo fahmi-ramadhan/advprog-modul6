@@ -21,3 +21,9 @@ Pada kode baru untuk _method_ `handle_connection`, terdapat beberapa penambahan 
 Pemisahan antara _response_ dilakukan berdasarkan HTTP _request_ yang diterima oleh _web server_. Jika _request_-nya adalah untuk path _root_ ("/"), _server_ akan mengembalikan isi dari _file_ `hello.html` dengan kode status 200 (OK). Sementara itu, jika permintaannya adalah untuk _path_ lain, _server_ akan mengembalikan _error_ 404 (NOT FOUND) beserta isi dari _file_ `404.html`.
 
 _Refactor_ diperlukan untuk menghilangkan pengulangan dalam kode tersebut. Sebelum di-_refactor_, blok `if` dan `else` mengandung kode yang diulang untuk membaca _file_ dan menulis _response_. Dengan melakukan _refactor_, perbedaan antara kasus (`status_line` dan `filename`) dimasukkan ke dalam variabel, dan kode umum untuk membaca _file_ dan menulis _response_ ditempatkan di luar blok kondisional. Hal ini membuat kode menjadi lebih ringkas, lebih _maintainable_, dan dapat memastikan konsistensi dalam penanganan _response_.
+
+### Commit 4 Reflection Notes
+
+Saat ini, _server_ akan memproses setiap _request_ secara bergantian, yang berarti tidak akan memproses koneksi kedua sampai yang pertama selesai diproses. Jika _server_ menerima lebih banyak lagi _request_, eksekusi serial ini akan menjadi kurang optimal. Jika server menerima _request_ yang memakan waktu lama untuk diproses, _request_ berikutnya harus menunggu sampai _request_ yang lama selesai, bahkan jika _request_ yang baru dapat diproses dengan cepat.
+
+Untuk mensimulasikan _request_ yang lambat dalam implementasi _server_ saat ini, kita memodifikasi method `handle_connection` untuk menangani _request_ ke `/sleep` dengan _response_ yang disimulasikan lambat, yang menyebabkan _server_ untuk _sleep_ selama lima detik sebelum memberi _response_. Kode sekarang menggunakan _statement_ `match` untuk menangani tiga kasus berdasarkan isi dari `request_line`.
