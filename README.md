@@ -13,3 +13,11 @@ _Browser_ memberi sinyal akhir dari sebuah HTTP _request_ dengan mengirimkan dua
 ![Commit 2 screen capture](/assets/images/commit2.png)
 
 Pada kode baru untuk _method_ `handle_connection`, terdapat beberapa penambahan agar dapat mengembalikan konten HTML kepada klien. Pertama, _server_ membaca isi dari _file_ `hello.html` menggunakan `fs::read_to_string`, yang kemudian disertakan sebagai _body_ dari HTTP _response_. Selanjutnya, `status_line` diatur menjadi `"HTTP/1.1 200 OK"`, dan _header_ `Content-Length` ditambahkan untuk menentukan ukuran _response body_ sehingga HTTP _response_ menjadi valid. Hal ini memungkinkan pengguna untuk melihat halaman HTML yang dihasilkan saat mengakses _server_ melalui _browser_. Namun, saat ini _server_ masih belum membedakan jenis-jenis _request_ yang berbeda sehingga akan selalu mengembalikan isi dari _file_ `hello.html`.
+
+### Commit 3 Reflection Notes
+
+![Commit 3 screen capture](/assets/images/commit3.png)
+
+Pemisahan antara _response_ dilakukan berdasarkan HTTP _request_ yang diterima oleh _web server_. Jika _request_-nya adalah untuk path _root_ ("/"), _server_ akan mengembalikan isi dari _file_ `hello.html` dengan kode status 200 (OK). Sementara itu, jika permintaannya adalah untuk _path_ lain, _server_ akan mengembalikan _error_ 404 (NOT FOUND) beserta isi dari _file_ `404.html`.
+
+_Refactor_ diperlukan untuk menghilangkan pengulangan dalam kode tersebut. Sebelum di-_refactor_, blok `if` dan `else` mengandung kode yang diulang untuk membaca _file_ dan menulis _response_. Dengan melakukan _refactor_, perbedaan antara kasus (`status_line` dan `filename`) dimasukkan ke dalam variabel, dan kode umum untuk membaca _file_ dan menulis _response_ ditempatkan di luar blok kondisional. Hal ini membuat kode menjadi lebih ringkas, lebih _maintainable_, dan dapat memastikan konsistensi dalam penanganan _response_.
